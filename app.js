@@ -1,58 +1,99 @@
-// 地図初期化
-const map = L.map("map").setView([35.1, 135.2], 9);
+// =========================
+// TransitAnimator v0.2
+// 地図表示＋マーカー＋経路描画
+// =========================
 
+// 地図作成
+const map = L.map("map").setView([35.15, 135.35], 9);
+
+// OpenStreetMap
 L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution: "© OpenStreetMap contributors"
-  }
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 19
+    }
 ).addTo(map);
 
-// 描画用レイヤー
-const drawLayer = L.layerGroup().addTo(map);
+// 描画レイヤー
+const routeLayer = L.layerGroup().addTo(map);
 
-// 仮の駅データ
+// 駅データ（今後JSON化）
 const stations = {
-  "福知山": [35.2966, 135.1268],
-  "園部": [35.1024, 135.4706],
-  "京都": [35.0116, 135.7681],
-  "大阪": [34.7025, 135.4959]
+    "福知山": {
+        lat: 35.2966,
+        lng: 135.1268
+    },
+    "園部": {
+        lat: 35.1024,
+        lng: 135.4706
+    },
+    "京都": {
+        lat: 35.0116,
+        lng: 135.7681
+    },
+    "大阪": {
+        lat: 34.7025,
+        lng: 135.4959
+    }
 };
 
 // マーカー表示
-Object.entries(stations).forEach(([name, pos]) => {
-  L.marker(pos).addTo(map).bindPopup(name);
-});
+for (const name in stations) {
 
-// 経路描画
-function drawRoute(names){
+    const s = stations[name];
 
-    drawLayer.clearLayers();
+    L.marker([s.lat, s.lng])
+        .addTo(map)
+        .bindPopup(name);
 
-    const points=[];
-
-    names.forEach(name=>{
-
-        if(stations[name]){
-            points.push(stations[name]);
-        }
-
-    });
-
-    if(points.length<2) return;
-
-    L.polyline(points,{
-        color:"blue",
-        weight:6
-    }).addTo(drawLayer);
-
-    map.fitBounds(points);
 }
 
-// サンプル
-drawRoute([
+// サンプル経路
+const sampleRoute = [
     "福知山",
     "園部",
     "京都",
     "大阪"
-]);
+];
+
+// 経路描画
+function drawRoute(route){
+
+    routeLayer.clearLayers();
+
+    const latlngs = [];
+
+    for(const stationName of route){
+
+        if(stations[stationName]){
+
+            latlngs.push([
+                stations[stationName].lat,
+                stations[stationName].lng
+            ]);
+
+        }
+
+    }
+
+    if(latlngs.length < 2){
+        return;
+    }
+
+    const line = L.polyline(
+        latlngs,
+        {
+            color: "#1565C0",
+            weight: 6
+        }
+    );
+
+    line.addTo(routeLayer);
+
+    map.fitBounds(line.getBounds());
+
+}
+
+// 起動時に描画
+drawRoute(sampleRoute);
