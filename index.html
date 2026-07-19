@@ -27,45 +27,7 @@ html,body{
 
 <div id="map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-
-const map=L.map("map").setView([35.05,135.13],9);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-    attribution:'© OpenStreetMap contributors'
-}
-).addTo(map);
-
-// 福知山
-const f=[35.2966,135.1268];
-
-// 京都
-const k=[35.0116,135.7681];
-
-// 大阪
-const o=[34.7025,135.4959];
-
-L.marker(f).addTo(map).bindPopup("福知山");
-L.marker(k).addTo(map).bindPopup("京都");
-L.marker(o).addTo(map).bindPopup("大阪");
-
-L.polyline(
-[
-f,
-k,
-o
-],
-{
-color:"blue",
-weight:6
-}
-).addTo(map);
-
-map.fitBounds([f,o]);
+<script src="app.js"></script>
 
 </script>
 
