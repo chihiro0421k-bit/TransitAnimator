@@ -97,3 +97,20 @@ function drawRoute(route){
 
 // 起動時に描画
 drawRoute(sampleRoute);
+document
+.getElementById("drawButton")
+.addEventListener("click", () => {
+
+    const text =
+        document
+        .getElementById("routeInput")
+        .value;
+
+    const route = text
+        .split("\n")
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+    drawRoute(route);
+
+});
