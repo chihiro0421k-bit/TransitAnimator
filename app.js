@@ -106,11 +106,15 @@ document
         .getElementById("routeInput")
         .value;
 
-    const route = text
-        .split("\n")
-        .map(s => s.trim())
-        .filter(s => s.length > 0);
+    const routes = parseInput(text);
 
+routeLayer.clearLayers();
+
+routes.forEach(r=>{
+
+    drawRoute(r.stations);
+
+});
     drawRoute(route);
 
 });
@@ -134,5 +138,42 @@ if (navigator.geolocation) {
         .bindPopup("現在地");
 
     });
+
+}
+// =========================
+// 路線入力解析
+// =========================
+
+function parseInput(text){
+
+    const routes=[];
+
+    const lines=text.split("\n");
+
+    for(const line of lines){
+
+        const t=line.trim();
+
+        if(t==="") continue;
+
+        const colon=t.indexOf(":");
+
+        if(colon===-1) continue;
+
+        const railway=t.substring(0,colon).trim();
+
+        const stations=t
+            .substring(colon+1)
+            .split("→")
+            .map(v=>v.trim());
+
+        routes.push({
+            railway,
+            stations
+        });
+
+    }
+
+    return routes;
 
 }
