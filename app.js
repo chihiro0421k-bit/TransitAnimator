@@ -114,3 +114,25 @@ document
     drawRoute(route);
 
 });
+// 現在地を表示
+if (navigator.geolocation) {
+
+    navigator.geolocation.getCurrentPosition(position => {
+
+        const me = [
+            position.coords.latitude,
+            position.coords.longitude
+        ];
+
+        L.circleMarker(me,{
+            radius:8,
+            color:"red",
+            fillColor:"red",
+            fillOpacity:1
+        })
+        .addTo(map)
+        .bindPopup("現在地");
+
+    });
+
+}
